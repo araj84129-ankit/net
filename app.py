@@ -75,16 +75,20 @@ def save_test():
 
 
 if __name__ == "__main__":
+    import os
+
+    port = int(os.environ.get("PORT", 5000))
+
     print("=" * 50)
     print("        NET SPEED MONITOR")
     print("=" * 50)
-    print("PC URL  : http://127.0.0.1:5000")
-    print("LAN URL : http://" + get_local_ip() + ":5000")
+    print("PC URL  : http://127.0.0.1:" + str(port))
+    print("LAN URL : http://" + get_local_ip() + ":" + str(port))
     print("=" * 50)
 
     app.run(
         host="0.0.0.0",
-        port=5000,
+        port=port,
         debug=False,
         threaded=True
     )
