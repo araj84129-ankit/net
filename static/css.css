@@ -1,0 +1,270 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6fa;
+    color: #172033;
+}
+
+.container {
+    width: 94%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 0;
+}
+
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0 0 7px;
+    font-size: 35px;
+}
+
+.header p {
+    margin: 0;
+    color: #667085;
+}
+
+.status {
+    padding: 11px 18px;
+    border-radius: 30px;
+    font-weight: bold;
+}
+
+.status.online {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.offline {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status.checking {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+
+/* SYSTEM */
+
+.system-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.system-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+.system-card span {
+    display: block;
+    color: #667085;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.system-card strong {
+    font-size: 17px;
+}
+
+
+/* SPEED */
+
+.speed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.speed-card {
+    background: white;
+    padding: 28px;
+    border-radius: 18px;
+    border: 1px solid #e5e7eb;
+    min-height: 210px;
+}
+
+.speed-icon {
+    font-size: 38px;
+    margin-bottom: 18px;
+}
+
+.speed-card p {
+    color: #667085;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.speed-card h2 {
+    margin: 10px 0;
+    font-size: 38px;
+}
+
+.speed-card span {
+    color: #667085;
+}
+
+
+/* PANEL */
+
+.panel {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.panel-header h2 {
+    margin: 0 0 7px;
+}
+
+.panel-header p {
+    margin: 0;
+    color: #667085;
+}
+
+
+button {
+    border: none;
+    background: #172033;
+    color: white;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: .88;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+button.danger {
+    background: #b42318;
+}
+
+
+/* PROGRESS */
+
+.progress-container {
+    height: 13px;
+    background: #e9edf3;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 25px;
+}
+
+#progressBar {
+    width: 0%;
+    height: 100%;
+    background: #172033;
+    transition: width .2s;
+}
+
+.current-speed {
+    margin-top: 15px;
+    color: #667085;
+}
+
+.current-speed strong {
+    color: #172033;
+}
+
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #edf0f4;
+}
+
+th {
+    color: #667085;
+    font-size: 13px;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    color: #667085;
+    font-size: 13px;
+    margin-top: 25px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .system-grid,
+    .speed-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .panel-header button {
+        width: 100%;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+}

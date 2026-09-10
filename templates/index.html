@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Internet Speed Monitor</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+
+        <div>
+            <h1>🌐 Internet Speed Monitor</h1>
+            <p>Real-time internet connection dashboard</p>
+        </div>
+
+        <div id="connectionStatus" class="status checking">
+            Checking...
+        </div>
+
+    </header>
+
+
+    <!-- SYSTEM INFORMATION -->
+
+    <section class="system-grid">
+
+        <div class="system-card">
+            <span>Computer</span>
+            <strong id="hostname">---</strong>
+        </div>
+
+        <div class="system-card">
+            <span>Local IP</span>
+            <strong id="localIp">---</strong>
+        </div>
+
+        <div class="system-card">
+            <span>Last Update</span>
+            <strong id="lastUpdate">---</strong>
+        </div>
+
+    </section>
+
+
+    <!-- SPEED CARDS -->
+
+    <section class="speed-grid">
+
+        <div class="speed-card download">
+
+            <div class="speed-icon">
+                ↓
+            </div>
+
+            <p>DOWNLOAD</p>
+
+            <h2 id="downloadSpeed">
+                0 Mbps
+            </h2>
+
+            <span id="downloadBytes">
+                0 MB/s
+            </span>
+
+        </div>
+
+
+        <div class="speed-card upload">
+
+            <div class="speed-icon">
+                ↑
+            </div>
+
+            <p>UPLOAD</p>
+
+            <h2 id="uploadSpeed">
+                0 Mbps
+            </h2>
+
+            <span id="uploadBytes">
+                0 MB/s
+            </span>
+
+        </div>
+
+
+        <div class="speed-card ping">
+
+            <div class="speed-icon">
+                📡
+            </div>
+
+            <p>PING</p>
+
+            <h2 id="ping">
+                0 ms
+            </h2>
+
+            <span>
+                Network latency
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- SPEED TEST -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+                <h2>⚡ Speed Test</h2>
+
+                <p id="testMessage">
+                    Start the test to measure your internet speed.
+                </p>
+            </div>
+
+            <button id="startButton">
+                ▶ Start Test
+            </button>
+
+        </div>
+
+
+        <div class="progress-container">
+
+            <div id="progressBar"></div>
+
+        </div>
+
+
+        <div class="current-speed">
+
+            Current Speed:
+
+            <strong id="currentSpeed">
+                0 Mbps
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- HISTORY -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+                <h2>📊 Speed Test History</h2>
+
+                <p>
+                    Your tests made on this webpage.
+                </p>
+            </div>
+
+            <button id="clearHistory" class="danger">
+                Clear History
+            </button>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Download</th>
+                        <th>Upload</th>
+                        <th>Ping</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historyTable">
+
+                    <tr>
+                        <td colspan="4">
+                            No test performed yet.
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        Internet Speed Monitor • Local Dashboard
+
+    </footer>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js.js') }}"></script>
+
+</body>
+
+</html>
