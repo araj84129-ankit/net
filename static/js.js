@@ -133,9 +133,12 @@ async function testPing() {
 
 async function testDownload() {
 
+    // 25MB download for accurate result
+    const BYTES = 25000000;
+
     const url =
-        "https://speed.cloudflare.com/__down?bytes=5000000&x="
-        + Date.now();
+        "https://speed.cloudflare.com/__down?bytes=" +
+        BYTES + "&x=" + Date.now();
 
     const start =
         performance.now();
@@ -159,6 +162,12 @@ async function testDownload() {
 
     let totalBytes = 0;
 
+    // Skip first 0.5s to avoid burst spike
+    const WARMUP_MS = 500;
+
+    let measureStart = null;
+    let measureBytes = 0;
+
     while (true) {
 
         const {
@@ -170,46 +179,64 @@ async function testDownload() {
             break;
         }
 
-        totalBytes +=
-            value.byteLength;
+        totalBytes += value.byteLength;
 
-        const elapsed =
-            (performance.now() - start)
-            / 1000;
+        const elapsed = performance.now() - start;
 
-        const currentMbps =
-            totalBytes * 8
-            / elapsed
-            / 1000000;
+        // Start measuring after warmup
+        if (elapsed >= WARMUP_MS) {
 
-        $("currentSpeed").textContent =
-            formatSpeed(currentMbps);
+            if (measureStart === null) {
+                measureStart = performance.now();
+                measureBytes = 0;
+            }
 
-        $("downloadSpeed").textContent =
-            formatSpeed(currentMbps);
+            measureBytes += value.byteLength;
 
-        $("downloadBytes").textContent =
-            formatMBps(currentMbps);
+            const measureElapsed =
+                (performance.now() - measureStart) / 1000;
+
+            if (measureElapsed > 0) {
+
+                const currentMbps =
+                    measureBytes * 8
+                    / measureElapsed
+                    / 1000000;
+
+                $("currentSpeed").textContent =
+                    formatSpeed(currentMbps);
+
+                $("downloadSpeed").textContent =
+                    formatSpeed(currentMbps);
+
+                $("downloadBytes").textContent =
+                    formatMBps(currentMbps);
+            }
+        }
 
         const progress =
             Math.min(
                 45,
-                totalBytes / 5000000 * 45
+                totalBytes / BYTES * 45
             );
 
         $("progressBar").style.width =
             progress + "%";
     }
 
-    const seconds =
+    // Final result: use only measured portion
+    const measureElapsed =
         Math.max(
-            (performance.now() - start) / 1000,
+            (performance.now() - (measureStart || start)) / 1000,
             0.001
         );
 
+    const finalBytes =
+        measureStart !== null ? measureBytes : totalBytes;
+
     return (
-        totalBytes * 8
-        / seconds
+        finalBytes * 8
+        / measureElapsed
         / 1000000
     );
 }
@@ -221,44 +248,69 @@ async function testDownload() {
 
 async function testUpload() {
 
-    const size =
-        1000000;
+    // Upload 3 chunks of 3MB each, measure middle chunk
+    const CHUNK_SIZE = 3000000;
+    const CHUNKS = 3;
 
-    const data =
-        new Uint8Array(size);
-
+    const data = new Uint8Array(CHUNK_SIZE);
     data.fill(65);
 
-    const start =
-        performance.now();
+    let totalBytes = 0;
+    let totalSeconds = 0;
 
-    const response =
-        await fetch(
-            "https://speed.cloudflare.com/__up",
-            {
-                method: "POST",
-                body: data,
-                cache: "no-store"
-            }
-        );
+    for (let i = 0; i < CHUNKS; i++) {
 
-    if (!response.ok) {
-        throw new Error(
-            "Upload test failed"
-        );
+        const start = performance.now();
+
+        const response =
+            await fetch(
+                "https://speed.cloudflare.com/__up",
+                {
+                    method: "POST",
+                    body: data,
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error("Upload test failed");
+        }
+
+        await response.arrayBuffer();
+
+        const seconds =
+            Math.max(
+                (performance.now() - start) / 1000,
+                0.001
+            );
+
+        // Skip first chunk (warmup)
+        if (i > 0) {
+            totalBytes += CHUNK_SIZE;
+            totalSeconds += seconds;
+        }
+
+        // Show live speed
+        const liveMbps =
+            CHUNK_SIZE * 8 / seconds / 1000000;
+
+        $("currentSpeed").textContent =
+            formatSpeed(liveMbps);
+
+        $("uploadSpeed").textContent =
+            formatSpeed(liveMbps);
+
+        $("uploadBytes").textContent =
+            formatMBps(liveMbps);
+
+        // Progress: 55% to 95%
+        const progress = 55 + ((i + 1) / CHUNKS) * 40;
+        $("progressBar").style.width = progress + "%";
     }
 
-    await response.arrayBuffer();
-
-    const seconds =
-        Math.max(
-            (performance.now() - start) / 1000,
-            0.001
-        );
-
     return (
-        size * 8
-        / seconds
+        totalBytes * 8
+        / totalSeconds
         / 1000000
     );
 }
